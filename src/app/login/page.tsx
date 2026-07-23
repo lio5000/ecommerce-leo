@@ -16,8 +16,16 @@ export default function LoginPage() {
       alert("Campos incompletos");
       return;
     }
-    localStorage.setItem("user", JSON.stringify({ email }));
-    router.push("/");
+    const storedUser = localStorage.getItem("registeredUser");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      if (parsedUser.email === email && parsedUser.password === password) {
+        localStorage.setItem("user", JSON.stringify({ email }));
+        router.push("/");
+        return;
+      }
+    }
+    alert("Credenciales incorrectas o usuario no registrado");
   };
 
   return (
