@@ -101,7 +101,7 @@ export default function Navbar() {
 
         <div className="flex items-center space-x-6">
           <Link href="/" className="hover:text-indigo-400 transition-colors">
-            Catálogo
+            Catalogo
           </Link>
 
           <button
