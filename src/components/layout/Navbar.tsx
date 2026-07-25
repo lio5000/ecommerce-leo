@@ -4,8 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { CartItem } from "@/types";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -126,25 +128,7 @@ export default function Navbar() {
 
   const handleCheckout = () => {
     setIsDrawerOpen(false);
-
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      const cartKey = `cart_${parsedUser.email}`;
-      localStorage.removeItem(cartKey);
-    }
-
-    setCart([]);
-    window.dispatchEvent(new Event("cartUpdated"));
-
-    Swal.fire({
-      title: "¡Compra simulada con exito!",
-      text: "El carrito se ha vaciado correctamente.",
-      icon: "success",
-      background: "#1f2937",
-      color: "#ffffff",
-      confirmButtonColor: "#4f46e5",
-    });
+    router.push("/factura");
   };
 
   return (
