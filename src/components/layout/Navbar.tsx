@@ -10,22 +10,49 @@ export default function Navbar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadUserData = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsed = JSON.parse(storedUser);
       setUserEmail(parsed.email);
+    } else {
+      setUserEmail(null);
     }
+  };
 
+  const loadCartData = () => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
       setCart(JSON.parse(storedCart));
+    } else {
+      setCart([]);
     }
+  };
+
+  useEffect(() => {
+    loadUserData();
+    loadCartData();
+
+    const handleStorageChange = () => {
+      loadCartData();
+      loadUserData();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("cartUpdated", handleStorageChange);
+    window.addEventListener("authUpdated", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("cartUpdated", handleStorageChange);
+      window.removeEventListener("authUpdated", handleStorageChange);
+    };
   }, []);
 
   const updateCartStorage = (newCart: CartItem[]) => {
     setCart(newCart);
     localStorage.setItem("cart", JSON.stringify(newCart));
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   const increaseQuantity = (gameId: number) => {
@@ -89,7 +116,24 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUserEmail(null);
+    window.dispatchEvent(new Event("authUpdated"));
     window.location.href = "/login";
+  };
+
+  const handleCheckout = () => {
+    setIsDrawerOpen(false);
+
+    localStorage.removeItem("cart");
+    window.dispatchEvent(new Event("cartUpdated"));
+
+    Swal.fire({
+      title: "¡Compra simulada con exito!",
+      text: "El carrito se ha vaciado correctamente.",
+      icon: "success",
+      background: "#1f2937",
+      color: "#ffffff",
+      confirmButtonColor: "#4f46e5",
+    });
   };
 
   return (
@@ -104,17 +148,19 @@ export default function Navbar() {
             Catalogo
           </Link>
 
-          <button
-            onClick={() => setIsDrawerOpen(true)}
-            className="relative bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
-          >
-            <span>Carrito</span>
-            {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                {totalItems}
-              </span>
-            )}
-          </button>
+          {userEmail && (
+            <button
+              onClick={() => setIsDrawerOpen(true)}
+              className="relative bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
+            >
+              <span>Carrito</span>
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+          )}
 
           {userEmail ? (
             <div className="flex items-center space-x-4">
@@ -134,7 +180,7 @@ export default function Navbar() {
                 href="/login"
                 className="text-indigo-400 hover:underline text-sm"
               >
-                Login
+                Iniciar Sesion
               </Link>
               <Link
                 href="/register"
@@ -169,7 +215,7 @@ export default function Navbar() {
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 {cart.length === 0 ? (
                   <p className="text-center text-gray-400 mt-10">
-                    Tu carrito está vacío.
+                    Tu carrito esta vacio.
                   </p>
                 ) : (
                   cart.map((item) => (
@@ -235,17 +281,7 @@ export default function Navbar() {
                     </span>
                   </div>
                   <button
-                    onClick={() => {
-                      setIsDrawerOpen(false);
-                      Swal.fire({
-                        title: "Próximo paso",
-                        text: "Aquí pasaremos a generar la factura y PDF.",
-                        icon: "info",
-                        background: "#1f2937",
-                        color: "#ffffff",
-                        confirmButtonColor: "#4f46e5",
-                      });
-                    }}
+                    onClick={handleCheckout}
                     className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold transition-colors text-center block"
                   >
                     Terminar Compra
