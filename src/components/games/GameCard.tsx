@@ -9,7 +9,26 @@ interface GameCardProps {
 
 export default function GameCard({ game }: GameCardProps) {
   const handleAddToCart = () => {
-    const storedCart = localStorage.getItem("cart");
+    const storedUser = localStorage.getItem("user");
+
+    if (!storedUser) {
+      Swal.fire({
+        title: "Inicia sesion",
+        text: "Debes iniciar sesion para agregar productos al carrito.",
+        icon: "warning",
+        confirmButtonColor: "#4f46e5",
+        background: "#1f2937",
+        color: "#ffffff",
+      }).then(() => {
+        window.location.href = "/login";
+      });
+      return;
+    }
+
+    const parsedUser = JSON.parse(storedUser);
+    const cartKey = `cart_${parsedUser.email}`;
+
+    const storedCart = localStorage.getItem(cartKey);
     let cart: CartItem[] = storedCart ? JSON.parse(storedCart) : [];
 
     const existingIndex = cart.findIndex((item) => item.game.id === game.id);
@@ -20,12 +39,12 @@ export default function GameCard({ game }: GameCardProps) {
       cart.push({ game, quantity: 1 });
     }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    window.dispatchEvent(new Event("storage"));
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+    window.dispatchEvent(new Event("cartUpdated"));
 
     Swal.fire({
       title: "Agregado",
-      text: `${game.title} se añadió al carrito`,
+      text: `${game.title} se añadio al carrito`,
       icon: "success",
       timer: 1500,
       showConfirmButton: false,

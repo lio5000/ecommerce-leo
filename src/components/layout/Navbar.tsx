@@ -10,32 +10,30 @@ export default function Navbar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
-  const loadUserData = () => {
+  const loadData = () => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsed = JSON.parse(storedUser);
       setUserEmail(parsed.email);
+
+      const cartKey = `cart_${parsed.email}`;
+      const storedCart = localStorage.getItem(cartKey);
+      if (storedCart) {
+        setCart(JSON.parse(storedCart));
+      } else {
+        setCart([]);
+      }
     } else {
       setUserEmail(null);
-    }
-  };
-
-  const loadCartData = () => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
-    } else {
       setCart([]);
     }
   };
 
   useEffect(() => {
-    loadUserData();
-    loadCartData();
+    loadData();
 
     const handleStorageChange = () => {
-      loadCartData();
-      loadUserData();
+      loadData();
     };
 
     window.addEventListener("storage", handleStorageChange);
@@ -51,7 +49,12 @@ export default function Navbar() {
 
   const updateCartStorage = (newCart: CartItem[]) => {
     setCart(newCart);
-    localStorage.setItem("cart", JSON.stringify(newCart));
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      const cartKey = `cart_${parsedUser.email}`;
+      localStorage.setItem(cartKey, JSON.stringify(newCart));
+    }
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
@@ -116,6 +119,7 @@ export default function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUserEmail(null);
+    setCart([]);
     window.dispatchEvent(new Event("authUpdated"));
     window.location.href = "/login";
   };
@@ -123,7 +127,14 @@ export default function Navbar() {
   const handleCheckout = () => {
     setIsDrawerOpen(false);
 
-    localStorage.removeItem("cart");
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      const cartKey = `cart_${parsedUser.email}`;
+      localStorage.removeItem(cartKey);
+    }
+
+    setCart([]);
     window.dispatchEvent(new Event("cartUpdated"));
 
     Swal.fire({

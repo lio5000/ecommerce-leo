@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation"; //esto es para redirigir al usuario luego de validar los datos
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,19 +14,54 @@ export default function LoginPage() {
   const handleLogin = (e: any) => {
     e.preventDefault();
     if (!email || !password) {
-      alert("Campos incompletos");
+      Swal.fire({
+        title: "Campos incompletos",
+        text: "Por favor, completa todos los campos.",
+        icon: "warning",
+        confirmButtonColor: "#4f46e5",
+        background: "#1f2937",
+        color: "#ffffff",
+      });
       return;
     }
-    const storedUser = localStorage.getItem("registeredUser");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      if (parsedUser.email === email && parsedUser.password === password) {
-        localStorage.setItem("user", JSON.stringify({ email }));
-        router.push("/");
+
+    const storedUsers = localStorage.getItem("registeredUsers");
+    if (storedUsers) {
+      const parsedUsers = JSON.parse(storedUsers);
+      const foundUser = parsedUsers.find(
+        (u: any) => u.email === email && u.password === password,
+      );
+
+      if (foundUser) {
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ email: foundUser.email }),
+        );
+        window.dispatchEvent(new Event("authUpdated"));
+
+        Swal.fire({
+          title: "¡Bienvenido!",
+          text: "Has iniciado sesión correctamente.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+          background: "#1f2937",
+          color: "#ffffff",
+        }).then(() => {
+          router.push("/");
+        });
         return;
       }
     }
-    alert("Credenciales incorrectas o usuario no registrado");
+
+    Swal.fire({
+      title: "Error",
+      text: "Credenciales incorrectas o usuario no registrado.",
+      icon: "error",
+      confirmButtonColor: "#4f46e5",
+      background: "#1f2937",
+      color: "#ffffff",
+    });
   };
 
   return (

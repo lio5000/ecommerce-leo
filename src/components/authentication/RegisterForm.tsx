@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -12,12 +13,50 @@ export default function RegisterPage() {
   const handleRegister = (e: any) => {
     e.preventDefault();
     if (!name || !email || !password) {
-      alert("Campos incompletos");
+      Swal.fire({
+        title: "Campos incompletos",
+        text: "Por favor, completa todos los campos.",
+        icon: "warning",
+        confirmButtonColor: "#4f46e5",
+        background: "#1f2937",
+        color: "#ffffff",
+      });
       return;
     }
+
+    const existingUsers = JSON.parse(
+      localStorage.getItem("registeredUsers") || "[]",
+    );
+
+    const userExists = existingUsers.some((u: any) => u.email === email);
+    if (userExists) {
+      Swal.fire({
+        title: "Error",
+        text: "Este correo ya está registrado",
+        icon: "error",
+        confirmButtonColor: "#4f46e5",
+        background: "#1f2937",
+        color: "#ffffff",
+      });
+      return;
+    }
+
     const newUser = { name, email, password };
-    localStorage.setItem("registeredUser", JSON.stringify(newUser));
-    router.push("/login");
+    existingUsers.push(newUser);
+
+    localStorage.setItem("registeredUsers", JSON.stringify(existingUsers));
+
+    Swal.fire({
+      title: "¡Registro exitoso!",
+      text: "Tu cuenta ha sido creada correctamente.",
+      icon: "success",
+      timer: 1500,
+      showConfirmButton: false,
+      background: "#1f2937",
+      color: "#ffffff",
+    }).then(() => {
+      router.push("/login");
+    });
   };
 
   return (
