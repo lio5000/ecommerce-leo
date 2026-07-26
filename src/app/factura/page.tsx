@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import emailjs from "@emailjs/browser";
+import Swal from "sweetalert2";
 import { CartItem } from "@/types";
 
 export default function FacturaPage() {
@@ -72,9 +74,51 @@ export default function FacturaPage() {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
-      localStorage.removeItem(`cart_${parsedUser.email}`);
+      const cartKey = `cart_${parsedUser.email}`;
+
+      const cartDetailsText = cartItems
+        .map(
+          (item) =>
+            `- ${item.game.title} (x${item.quantity}) - $${(item.game.price * item.quantity).toFixed(2)}`,
+        )
+        .join("\n");
+
+      const templateParams = {
+        to_name: parsedUser.email.split("@")[0],
+        to_email: parsedUser.email,
+        cart_details: cartDetailsText,
+        total_amount: total.toFixed(2),
+      };
+
+      emailjs
+        .send(
+          "service_e5rn8hj",
+          "template_b6qnk48",
+          templateParams,
+          "gmGNl9z55SDcEvLYA",
+        )
+        .then(() => {
+          Swal.fire({
+            title: "¡Compra exitosa!",
+            text: "Tu factura se ha descargado y el correo de confirmación ha sido enviado.",
+            icon: "success",
+            confirmButtonColor: "#4f46e5",
+          });
+        })
+        .catch((error) => {
+          console.error("Error al enviar el correo:", error);
+          Swal.fire({
+            title: "¡Factura descargada!",
+            text: "Tu PDF se descargó, pero hubo un detalle al enviar el correo.",
+            icon: "warning",
+            confirmButtonColor: "#4f46e5",
+          });
+        });
+
+      localStorage.removeItem(cartKey);
     }
     window.dispatchEvent(new Event("cartUpdated"));
+    router.push("/");
   };
 
   return (
