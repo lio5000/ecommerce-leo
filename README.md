@@ -97,4 +97,4 @@ ecommerce-leo/
 
 6. Link del sitio: https://ecommerce-leo.netlify.app/login
 
-7. Video explicativo: https://drive.google.com/file/d/1XE8B8zZTcn7isSBNJC80Pv4tyWxK3UhB/view?usp=sharing
+7. Video explicativo: https://drive.google.com/file/d/1vEqQ3AdWM91cccW6JcsFQEo0M3ZvRd4e/view?usp=sharing
