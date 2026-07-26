@@ -4,6 +4,15 @@ Plataforma de e-commerce moderna desarrollada con Next.js (App Router), TypeScri
 
 ---
 
+# Tecnologías y Librerías
+
+- Next.js (App Router) - Framework de React para el enrutamiento y renderizado.
+- TypeScript - Tipado estático para mayor seguridad en el código.
+- Tailwind CSS - Estilos y diseño responsivo de la interfaz.
+- jsPDF y jsPDF-AutoTable - Generación y diseño de la factura en formato PDF.
+- EmailJS - Envío de correos electrónicos automáticos con el detalle de la compra.
+- SweetAlert2 - Alertas y modales interactivos para el usuario.
+
 # Estructura del Proyecto
 
 ```
