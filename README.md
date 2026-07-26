@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# E-Commerce Leo (Next.js & TypeScript)
 
-## Getting Started
+Plataforma de e-commerce moderna desarrollada con Next.js (App Router), TypeScript y Tailwind CSS, diseñada para la venta y gestión de videojuegos, con generación automática de facturas en PDF, notificaciones por correo electrónico mediante EmailJS y alertas interactivas con SweetAlert2.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# Estructura del Proyecto
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ecommerce-leo/
+├── public/
+│ └── images/
+├── src/
+│ ├── app/
+│ │ ├── factura/
+│ │ │ └── page.tsx
+│ │ ├── login/
+│ │ │ └── page.tsx
+│ │ ├── register/
+│ │ │ └── page.tsx
+│ │ ├── layout.tsx
+│ │ └── page.tsx
+│ ├── components/
+│ │ ├── authentication/
+│ │ │ ├── LoginForm.tsx
+│ │ │ └── RegisterForm.tsx
+│ │ ├── games/
+│ │ │ └── GameCard.tsx
+│ │ └── layout/
+│ │ └── Navbar.tsx
+│ ├── data/
+│ │ └── games.ts
+│ └── types/
+│ ├── cart.ts
+│ ├── game.ts
+│ └── index.ts
+└── README.md
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Instrucciones de Instalación
 
-## Learn More
+1. Clonar el repositorio o descargar el código fuente en tu entorno local.
 
-To learn more about Next.js, take a look at the following resources:
+2. Abrir la terminal y navegar a la carpeta del proyecto:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   cd ecommerce-leo
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Instalar las dependencias del proyecto:
 
-## Deploy on Vercel
+   npm install
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Instalar las librerías necesarias (SweetAlert2, EmailJS, jsPDF):
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   npm install sweetalert2 @emailjs/browser jspdf jspdf-autotable
+
+5. Iniciar el servidor de desarrollo:
+
+   npm run dev
+
+6. Ver la aplicación:
+   Abre [http://localhost:3000](http://localhost:3000) en tu navegador web.
+
+---
+
+# Despliegue con Netlify
+
+1. Verificar compilación previa:
+   Genera el build de producción en local para asegurarte de que no haya errores:
+
+   npm run build
+
+2. Subir los cambios a GitHub:
+   Asegúrate de tener la versión final subida a tu repositorio.
+
+3. Crear nuevo sitio en Netlify:
+   - Inicia sesión en Netlify.
+   - Ve a "Add new site" y selecciona "Import an existing project".
+   - Conecta con GitHub y selecciona el repositorio `ecommerce-leo`.
+
+4. Configuración del despliegue:
+   - Build command: `npm run build`
+   - Publish directory: `.next`
+
+5. Desplegar:
+   Haz clic en el botón **Deploy** y tu proyecto quedará publicado en la web.
