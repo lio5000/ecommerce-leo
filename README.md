@@ -6,6 +6,7 @@ Plataforma de e-commerce moderna desarrollada con Next.js (App Router), TypeScri
 
 # Estructura del Proyecto
 
+```
 ecommerce-leo/
 ├── public/
 │ └── images/
@@ -34,6 +35,7 @@ ecommerce-leo/
 │ ├── game.ts
 │ └── index.ts
 └── README.md
+```
 
 ---
 
