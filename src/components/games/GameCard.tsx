@@ -55,12 +55,12 @@ export default function GameCard({ game }: GameCardProps) {
 
   return (
     <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden shadow-md hover:border-indigo-500 transition-colors flex flex-col">
-      <div className="relative w-full h-48 bg-gray-700">
+      <div className="relative w-full h-48 bg-gray-900">
         <Image
           src={game.image}
           alt={game.title}
           fill
-          className="object-cover"
+          className="object-contain p-2"
         />
       </div>
       <div className="p-4 flex flex-col flex-grow justify-between">
