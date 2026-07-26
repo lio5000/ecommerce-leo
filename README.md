@@ -82,4 +82,8 @@ ecommerce-leo/
    - Publish directory: `.next`
 
 5. Desplegar:
-   Haz clic en el botón **Deploy** y tu proyecto quedará publicado en la web.
+   Haz clic en el botón Deploy y tu proyecto quedará publicado en la web.
+
+6. Link del sitio: https://ecommerce-leo.netlify.app/login
+
+7. Video explicativo: https://drive.google.com/file/d/1XE8B8zZTcn7isSBNJC80Pv4tyWxK3UhB/view?usp=sharing
